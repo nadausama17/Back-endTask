@@ -35,7 +35,7 @@ class ProblemSolvingController extends Controller
         
         $result = 0;
         $inputSize =  strlen($input_string);
-        for($i=0; $i < $inputSize; $i++){
+        for($i = 0; $i < $inputSize; $i++){
             if(isset($alphabet[$input_string[$i]])){
                 $result += ($alphabet[$input_string[$i]] * pow(ALPHABET_COUNT,$inputSize-$i-1));
             }else{
@@ -49,5 +49,36 @@ class ProblemSolvingController extends Controller
         ];
 
         return response($response);
+    }
+
+    public function getReducedNumSteps(Request $request){
+        $inputs = $request->validate([
+            'N' => 'required|numeric|min:1',
+            'Q' => 'required',
+        ]);
+
+        if($inputs['N'] > count($inputs['Q']))
+            return response(['message' => 'the size entered is bigger than arr length'],422); 
+
+        $result = [];
+
+        for($i = 0; $i < $inputs['N']; $i++){
+            $num = $inputs['Q'][$i];
+            $temp = $num - 1;
+            $steps = 0;
+
+            while($temp > 1){
+                if($num % $temp == 0){
+                    $num = $temp;
+                    $steps++;
+                }
+                $temp--;
+            }
+
+            $steps+= $num;
+            $result[] = $steps;
+        }
+        
+        return response($result);
     }
 }

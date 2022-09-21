@@ -16,12 +16,11 @@ use App\Http\Controllers\ProblemSolvingController;
 */
 
 //backend task part one (problem solving)
-
 Route::get('/numsCount/{startNum}/{endNum}', [ProblemSolvingController::class, 'getNumsCount']);
 
 Route::get('/stringIndex/{input_string}', [ProblemSolvingController::class, 'getStringIndex']);
 
-
+Route::post('/reduceNumSteps', [ProblemSolvingController::class, 'getReducedNumSteps']);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
