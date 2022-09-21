@@ -56,18 +56,24 @@ class UserController extends Controller
     }
 
     public function updateUserInfo($id,Request $request){
-        $request->validate([
-            'email' => 'email|string|unique:users',
+        $inputs = $request->validate([
+            'email' => 'email|string',
             'name' => 'min:3|string',
             'dateOfBirth' => 'date',
             'phoneNum' => 'string|min:11|starts_with:0',
         ]);
 
+        $users = User::where('email',$request['email'])->get();
+
         $user = User::find($id);
+
+        if(count($users) > 0 && $user->email != $request['email']){
+            return response(['message' => 'email is already taken'],422);
+        }
         
         if(!$user) return response(['message' => 'user not found'],404);
 
-        $user->update($request->all());
+        $user->update($inputs);
 
         return response(['user' => $user]);
     }
